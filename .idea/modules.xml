@@ -3,6 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Java_Labs.iml" filepath="$PROJECT_DIR$/Java_Labs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lab1_Multithreading/Lab1_Multithreading.iml" filepath="$PROJECT_DIR$/Lab1_Multithreading/Lab1_Multithreading.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lab2_Networking/Lab2_Networking.iml" filepath="$PROJECT_DIR$/Lab2_Networking/Lab2_Networking.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lab3_Servlets/Lab3_Servlets.iml" filepath="$PROJECT_DIR$/Lab3_Servlets/Lab3_Servlets.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Lab4_JSP/Lab4_JSP.iml" filepath="$PROJECT_DIR$/Lab4_JSP/Lab4_JSP.iml" />
     </modules>
   </component>
 </project>
