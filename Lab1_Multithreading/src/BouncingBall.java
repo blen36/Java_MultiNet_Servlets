@@ -3,11 +3,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 
 public class BouncingBall implements Runnable {
-    // Максимальный радиус, который может иметь мяч
     private static final int MAX_RADIUS = 40;
-    // Минимальный радиус, который может иметь мяч
     private static final int MIN_RADIUS = 3;
-    // Максимальная скорость, с которой может летать мяч
     private static final int MAX_SPEED = 15;
 
     private Field field;
@@ -19,20 +16,16 @@ public class BouncingBall implements Runnable {
     private double speedX;
     private double speedY;
 
-    // Конструктор класса BouncingBall
     public BouncingBall(Field field) {
         this.field = field;
 
-        // Радиус мяча случайного размера
         radius = new Double(Math.random() * (MAX_RADIUS - MIN_RADIUS)).intValue() + MIN_RADIUS;
 
-        // Скорость зависит от диаметра мяча, чем он больше, тем медленнее
         speed = new Double(Math.round(5 * MAX_SPEED / radius)).intValue();
         if (speed > MAX_SPEED) {
             speed = MAX_SPEED;
         }
 
-        // Начальное направление скорости случайно, угол в пределах от 0 до 2PI
         double angle = Math.random() * 2 * Math.PI;
         speedX = 3 * Math.cos(angle);
         speedY = 3 * Math.sin(angle);
@@ -53,15 +46,10 @@ public class BouncingBall implements Runnable {
     // Метод run() исполняется внутри потока. Когда он завершает работу, то завершится и поток
     public void run() {
         try {
-            // Крутим бесконечный цикл, пока нас не прервут, мы не намерены завершаться
             while (true) {
                 field.canMove(this);
 
-                // Проверка столкновения с препятствием
-                if (field.checkObstacleCollision(this)) {
-                    speedX = -speedX;  // Отскок по горизонтали
-                    speedY = -speedY;  // Отскок по вертикали
-                }
+                field.handleObstacleCollision(this);
 
                 // Логика для столкновений с границами экрана
                 if (x + speedX <= radius) {
@@ -81,7 +69,6 @@ public class BouncingBall implements Runnable {
                     y += speedY;
                 }
 
-                // Засыпаем на X миллисекунд, где X определяется исходя из скорости
                 Thread.sleep(16 - speed);
             }
         } catch (InterruptedException ex) {
@@ -89,7 +76,6 @@ public class BouncingBall implements Runnable {
         }
     }
 
-    // Метод прорисовки самого себя
     public void paint(Graphics2D canvas) {
         canvas.setColor(color);
         Ellipse2D.Double ball = new Ellipse2D.Double(x - radius, y - radius, 2 * radius, 2 * radius);
@@ -97,7 +83,14 @@ public class BouncingBall implements Runnable {
         canvas.fill(ball);
     }
 
-    // Геттеры
+    public void invertSpeedX() {
+        speedX = -speedX;
+    }
+
+    public void invertSpeedY() {
+        speedY = -speedY;
+    }
+
     public double getX() {
         return x;
     }

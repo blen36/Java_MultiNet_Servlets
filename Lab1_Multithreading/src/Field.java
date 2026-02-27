@@ -6,7 +6,7 @@ import javax.swing.*;
 public class Field extends JPanel {
     private boolean paused;
     private ArrayList<BouncingBall> balls = new ArrayList<>(10);
-    private Obstacle obstacle;  // Препятствие
+    private Obstacle obstacle;
     private Timer repaintTimer = new Timer(10, new ActionListener() {
         public void actionPerformed(ActionEvent ev) {
             repaint();
@@ -49,18 +49,43 @@ public class Field extends JPanel {
         super.paintComponent(g);
         Graphics2D canvas = (Graphics2D) g;
 
-        // Рисуем все мячи
         for (BouncingBall ball : balls) {
             ball.paint(canvas);
         }
 
-        // Рисуем препятствие
         obstacle.paint(g);
     }
 
     // Метод для проверки столкновения с препятствием
-    public boolean checkObstacleCollision(BouncingBall ball) {
-        Rectangle ballBounds = new Rectangle((int)ball.getX() - ball.getRadius(), (int)ball.getY() - ball.getRadius(), ball.getRadius()*2, ball.getRadius()*2);
-        return ballBounds.intersects(obstacle.getBounds());
+    public void handleObstacleCollision(BouncingBall ball) {
+
+        Rectangle obstacleBounds = obstacle.getBounds();
+
+        double ballLeft = ball.getX() - ball.getRadius();
+        double ballRight = ball.getX() + ball.getRadius();
+        double ballTop = ball.getY() - ball.getRadius();
+        double ballBottom = ball.getY() + ball.getRadius();
+
+        // Проверка столкновения
+        if (obstacleBounds.intersects(
+                ballLeft, ballTop,
+                ball.getRadius() * 2,
+                ball.getRadius() * 2)) {
+
+            // Определяем минимальное пересечение по осям
+            double overlapLeft = ballRight - obstacleBounds.x;
+            double overlapRight = obstacleBounds.x + obstacleBounds.width - ballLeft;
+            double overlapTop = ballBottom - obstacleBounds.y;
+            double overlapBottom = obstacleBounds.y + obstacleBounds.height - ballTop;
+
+            double minOverlapX = Math.min(overlapLeft, overlapRight);
+            double minOverlapY = Math.min(overlapTop, overlapBottom);
+
+            if (minOverlapX < minOverlapY) {
+                ball.invertSpeedX();
+            } else {
+                ball.invertSpeedY();
+            }
+        }
     }
 }
